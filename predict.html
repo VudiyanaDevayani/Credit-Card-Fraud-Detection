@@ -1,0 +1,161 @@
+{% extends "base.html" %}
+
+{% block title %}Home - My Website{% endblock %}
+
+{% block content %}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+
+            <div class="card shadow-sm">
+                <div class="card-header text-center text-white">
+                    <h4>Fraud Prediction Form</h4>
+                </div>
+                <div class="card-body">
+
+                    <form method="POST">
+
+                        <div class="row">
+                            <!-- Sender -->
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Sender Account</label>
+                                <input type="text" class="form-control" name="sender_account" required>
+                            </div>
+
+                            <!-- Receiver -->
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Receiver Account</label>
+                                <input type="text" class="form-control" name="receiver_account" required>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <!-- Amount -->
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Amount</label>
+                                <input type="number" step="0.01" class="form-control" name="amount" required>
+                            </div>
+
+                            <!-- Spending deviation -->
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Spending Deviation Score</label>
+                                <input type="number" step="0.01" class="form-control" name="spending_deviation_score" required>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <!-- Velocity -->
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Velocity Score</label>
+                                <input type="number" step="0.01" class="form-control" name="velocity_score" required>
+                            </div>
+
+                            <!-- Geo Score -->
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Geo Anomaly Score</label>
+                                <input type="number" step="0.01" class="form-control" name="geo_anomaly_score" required>
+                            </div>
+                        </div>
+
+                        <!-- Transaction Type -->
+                        <div class="mb-3">
+                            <label class="form-label">Transaction Type</label>
+                            <select name="transaction_type_encoded" class="form-select" required>
+                                <option value="0">Deposit (0)</option>
+                                <option value="1">Payment (1)</option>
+                                <option value="2">Transfer (2)</option>
+                                <option value="3">Withdrawal (3)</option>
+                            </select>
+                        </div>
+
+                        <!-- Merchant Category -->
+                        <div class="mb-3">
+                            <label class="form-label">Merchant Category</label>
+                            <select name="merchant_category_encoded" class="form-select" required>
+                                <option value="0">Entertainment (0)</option>
+                                <option value="1">Grocery (1)</option>
+                                <option value="2">Online (2)</option>
+                                <option value="3">Other (3)</option>
+                                <option value="4">Restaurant (4)</option>
+                                <option value="5">Retail (5)</option>
+                                <option value="6">Travel (6)</option>
+                                <option value="7">Utilities (7)</option>
+                            </select>
+                        </div>
+
+                        <!-- Location -->
+                        <div class="mb-3">
+                            <label class="form-label">Location</label>
+                            <select name="location_encoded" class="form-select" required>
+                                <option value="0">Berlin (0)</option>
+                                <option value="1">Dubai (1)</option>
+                                <option value="2">London (2)</option>
+                                <option value="3">New York (3)</option>
+                                <option value="4">Singapore (4)</option>
+                                <option value="5">Sydney (5)</option>
+                                <option value="6">Tokyo (6)</option>
+                                <option value="7">Toronto (7)</option>
+                            </select>
+                        </div>
+
+                        <!-- Device Used -->
+                        <div class="mb-3">
+                            <label class="form-label">Device Used</label>
+                            <select name="device_used_encoded" class="form-select" required>
+                                <option value="0">ATM (0)</option>
+                                <option value="1">Mobile (1)</option>
+                                <option value="2">POS (2)</option>
+                                <option value="3">Web (3)</option>
+                            </select>
+                        </div>
+
+                        <!-- Payment Channel -->
+                        <div class="mb-3">
+                            <label class="form-label">Payment Channel</label>
+                            <select name="payment_channel_encoded" class="form-select" required>
+                                <option value="0">ACH (0)</option>
+                                <option value="1">UPI (1)</option>
+                                <option value="2">Card (2)</option>
+                                <option value="3">Wire Transfer (3)</option>
+                            </select>
+                        </div>
+
+                        <!-- Submit -->
+                        <div class="d-grid mt-4">
+                            <button type="submit" class="btn btn-lg">Predict</button>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+
+            {% if result is not none %}
+            <div class="card mt-4 shadow-sm">
+                <div class="card-header bg-success text-white text-center">
+                    <h5>Prediction Result</h5>
+                </div>
+                <div class="card-body">
+
+                    <p><strong>Fraud Probability:</strong> {{ result }}</p>
+
+
+                    {% if true_label != None %}
+                    <p><strong>True Label:</strong>
+                        {% if true_label == 1 %}
+                            True (1)
+                        {% else %}
+                            False (0)
+                        {% endif %}
+                    </p>
+                    {% endif %}
+
+                </div>
+            </div>
+            {% endif %}
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}

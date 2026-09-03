@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+
+{% block title %}Home - My Website{% endblock %}
+
+{% block content %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<div class="container py-5">
+
+    <div class="text-center mb-4">
+        <h2 class="fw-bold">Prediction Analytics</h2>
+        <p class="text-muted">Based on your prediction history</p>
+    </div>
+
+    <div class="row g-4">
+        <!-- Bar Chart -->
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white text-center">
+                    <h5>Fraud vs Legit (Bar Chart)</h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="barChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pie Chart -->
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-header bg-success text-white text-center">
+                    <h5>Fraud vs Legit (Pie Chart)</h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="pieChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    // Data passed from Flask
+    const countTrue = {{ count_true }};
+    const countFalse = {{ count_false }};
+    const countUnknown = {{ count_unknown }};
+
+    // Colors
+    const colors = ['#dc3545', '#198754', '#6c757d'];
+
+    // -------- BAR CHART --------
+    const barCtx = document.getElementById('barChart').getContext('2d');
+    new Chart(barCtx, {
+        type: 'bar',
+        data: {
+            labels: ['Fraud (True)', 'Legit (False)', 'Unknown'],
+            datasets: [{
+                label: 'Count',
+                data: [countTrue, countFalse, countUnknown],
+                backgroundColor: colors
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: { beginAtZero: true }
+            }
+        }
+    });
+
+    // -------- PIE CHART --------
+    const pieCtx = document.getElementById('pieChart').getContext('2d');
+    new Chart(pieCtx, {
+        type: 'pie',
+        data: {
+            labels: ['Fraud (True)', 'Legit (False)', 'Unknown'],
+            datasets: [{
+                data: [countTrue, countFalse, countUnknown],
+                backgroundColor: colors
+            }]
+        },
+        options: { responsive: true }
+    });
+</script>
+
+{% endblock %}

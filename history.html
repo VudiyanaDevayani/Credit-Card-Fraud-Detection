@@ -1,0 +1,131 @@
+{% extends "base.html" %}
+
+{% block title %}Home - My Website{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white text-center">
+            <h4>Your Prediction History</h4>
+        </div>
+        <div class="card-body">
+
+            {% if rows|length == 0 %}
+                <p class="text-center text-muted">No predictions found.</p>
+            {% else %}
+
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped table-hover align-middle">
+                    <thead class="table-dark text-center">
+                        <tr>
+                            <th>Sender</th>
+                            <th>Receiver</th>
+                            <th>Amount</th>
+                            <th>Spending</th>
+                            <th>Velocity</th>
+                            <th>Geo</th>
+                            <th>Transaction</th>
+                            <th>Merchant</th>
+                            <th>Location</th>
+                            <th>Device</th>
+                            <th>Channel</th>
+                            <th>Fraud Probability</th>
+                            <th>True Label</th>
+                         
+                        </tr>
+                    </thead>
+
+                    <tbody class="text-center">
+
+                        {% for row in rows %}
+                        <tr>
+                            <td>{{ row.sender_account }}</td>
+                            <td>{{ row.receiver_account }}</td>
+                            <td>{{ row.amount }}</td>
+                            <td>{{ row.spending_deviation_score }}</td>
+                            <td>{{ row.velocity_score }}</td>
+                            <td>{{ row.geo_anomaly_score }}</td>
+
+                            <!-- Transaction -->
+                            <td>
+                                {% if row.transaction_type_encoded == 0 %} Deposit
+                                {% elif row.transaction_type_encoded == 1 %} Payment
+                                {% elif row.transaction_type_encoded == 2 %} Transfer
+                                {% else %} Withdrawal
+                                {% endif %}
+                            </td>
+
+                            <!-- Merchant -->
+                            <td>
+                                {% set m = row.merchant_category_encoded %}
+                                {% if m == 0 %} Entertainment
+                                {% elif m == 1 %} Grocery
+                                {% elif m == 2 %} Online
+                                {% elif m == 3 %} Other
+                                {% elif m == 4 %} Restaurant
+                                {% elif m == 5 %} Retail
+                                {% elif m == 6 %} Travel
+                                {% else %} Utilities
+                                {% endif %}
+                            </td>
+
+                            <!-- Location -->
+                            <td>
+                                {% set l = row.location_encoded %}
+                                {% if l == 0 %} Berlin
+                                {% elif l == 1 %} Dubai
+                                {% elif l == 2 %} London
+                                {% elif l == 3 %} New York
+                                {% elif l == 4 %} Singapore
+                                {% elif l == 5 %} Sydney
+                                {% elif l == 6 %} Tokyo
+                                {% else %} Toronto
+                                {% endif %}
+                            </td>
+
+                            <!-- Device -->
+                            <td>
+                                {% if row.device_used_encoded == 0 %} ATM
+                                {% elif row.device_used_encoded == 1 %} Mobile
+                                {% elif row.device_used_encoded == 2 %} POS
+                                {% else %} Web
+                                {% endif %}
+                            </td>
+
+                            <!-- Channel -->
+                            <td>
+                                {% if row.payment_channel_encoded == 0 %} ACH
+                                {% elif row.payment_channel_encoded == 1 %} UPI
+                                {% elif row.payment_channel_encoded == 2 %} Card
+                                {% else %} Wire Transfer
+                                {% endif %}
+                            </td>
+
+                            <td>{{ row.fraud_probability }}</td>
+
+                          
+
+                            <!-- True Label -->
+                            <td>
+                                {% if row.true_label == None %}
+                                    <span class="text-muted">N/A</span>
+                                {% elif row.true_label == 1 %}
+                                    <span class="badge bg-danger">True</span>
+                                {% else %}
+                                    <span class="badge bg-success">False</span>
+                                {% endif %}
+                            </td>
+
+                        </tr>
+                        {% endfor %}
+
+                    </tbody>
+                </table>
+            </div>
+
+            {% endif %}
+
+        </div>
+    </div>
+{% endblock %}
